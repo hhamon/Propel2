@@ -85,6 +85,49 @@ class Database extends ScopedElement
         $this->defaultStringFormat = $this->getAttribute('defaultStringFormat', 'YAML');
     }
 
+    public function loadDefinition(array $definition)
+    {
+        if (!empty($definition['name'])) {
+            $this->name = $definition['name'];
+        }
+
+        if (!empty($definition['defaultIdMethod'])) {
+            $this->defaultIdMethod = $definition['defaultIdMethod'];
+        }
+
+        if (!empty($definition['package'])) {
+            $this->setPackage($definition['package']);
+        }
+
+        if (!empty($definition['schema'])) {
+            $this->schema = $definition['schema'];
+        }
+
+        if (!empty($definition['namespace'])) {
+            $this->namespace = $definition['namespace'];
+        }
+
+        if (!empty($definition['baseClass'])) {
+            $this->baseClass = $definition['baseClass'];
+        }
+
+        if (!empty($definition['basePeer'])) {
+            $this->basePeer = $definition['basePeer'];
+        }
+
+        if (!empty($definition['defaultPhpNamingMethod'])) {
+            $this->defaultPhpNamingMethod = $definition['defaultPhpNamingMethod'];
+        }
+
+        if (!empty($definition['heavyIndexing'])) {
+            $this->heavyIndexing = (boolean) $definition['heavyIndexing'];
+        }
+
+        if (!empty($definition['tablePrefix'])) {
+            $this->tablePrefix = $definition['tablePrefix'];
+        }
+    }
+
     /**
      * Returns the PlatformInterface implementation for this database.
      *

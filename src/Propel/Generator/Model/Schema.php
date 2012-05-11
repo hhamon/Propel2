@@ -134,7 +134,7 @@ class Schema
      */
     public function getShortName()
     {
-        return str_replace("-schema", "", $this->name);
+        return str_replace('-schema', '', $this->name);
     }
 
     /**
@@ -310,8 +310,8 @@ class Schema
     public function toString()
     {
         $result = '<app-data>'."\n";
-        foreach ($this->databases as $dbList) {
-            $result .= $dbList->toString();
+        foreach ($this->databases as $database) {
+            $result .= $database->toString();
         }
 
         if ($this->databases) {
@@ -330,5 +330,16 @@ class Schema
     public function __toString()
     {
         return $this->toString();
+    }
+
+    public function loadDefinition(array $databases)
+    {
+        foreach ($databases as $database) {
+            $db = new Database();
+            $db->setParentSchema($this);
+            $db->loadDefinition($database);
+
+            $this->addDatabase($db);
+        }
     }
 }

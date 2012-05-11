@@ -14,7 +14,6 @@ namespace Propel\Tests\Generator\Model;
 use Propel\Tests\Helpers\DummyPlatforms;
 use Propel\Tests\Helpers\NoSchemaPlatform;
 use Propel\Tests\Helpers\SchemaPlatform;
-
 use Propel\Generator\Model\Database;
 use Propel\Generator\Model\Table;
 
@@ -33,6 +32,39 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
         return array(
             array($database, $table)
         );
+    }
+
+    public function testLoadDefinition()
+    {
+        $definition = array(
+            'name'                   => 'bookstore',
+            'defaultIdMethod'        => 'native',
+            'package'                => 'Foo',
+            'schema'                 => 'acme',
+            'namespace'              => 'Acme',
+            'baseClass'              => 'CustomRecord',
+            'basePeer'               => 'CustomPeer',
+            'defaultPhpNamingMethod' => 'phpname',
+            'heavyIndexing'          => 'true',
+            'tablePrefix'            => 'bs_',
+        );
+
+        $database = new Database();
+        $database->setSchema('book');
+        $database->setPackage('Acme');
+        $database->setNamespace('Acme\Model');
+        $database->loadDefinition($definition);
+
+        $this->assertEquals('bookstore', $database->getName());
+        $this->assertEquals('native', $database->getDefaultIdMethod());
+        $this->assertEquals('Foo', $database->getPackage());
+        $this->assertEquals('acme', $database->getSchema());
+        $this->assertEquals('Acme', $database->getNamespace());
+        $this->assertEquals('CustomRecord', $database->getBaseClass());
+        $this->assertEquals('CustomPeer', $database->getBasePeer());
+        $this->assertEquals('phpname', $database->getDefaultPhpNamingMethod());
+        $this->assertEquals('bs_', $database->getTablePrefix());
+        $this->assertTrue($database->getHeavyIndexing());
     }
 
     public function testTableInheritsSchema()

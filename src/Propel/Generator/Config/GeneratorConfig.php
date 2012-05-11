@@ -69,10 +69,10 @@ class GeneratorConfig implements GeneratorConfigInterface
         $this->buildProperties = array();
 
         foreach ($props as $key => $propValue) {
-            if (strpos($key, "propel.") === 0) {
-                $newKey = substr($key, strlen("propel."));
+            if (0 === strpos($key, 'propel.')) {
+                $newKey = substr($key, strlen('propel.'));
                 $j = strpos($newKey, '.');
-                while ($j !== false) {
+                while (false !== $j) {
                     $newKey =  substr($newKey, 0, $j) . ucfirst(substr($newKey, $j + 1));
                     $j = strpos($newKey, '.');
                 }
@@ -120,7 +120,7 @@ class GeneratorConfig implements GeneratorConfigInterface
         // This is a slight hack to workaround camel case inconsistencies for the DataSQL classes.
         // Basically, we want to turn ?.?.?.sqliteDataSQLBuilder into ?.?.?.SqliteDataSQLBuilder
         $lastdotpos = strrpos($classpath, '.');
-        if ($lastdotpos !== false) {
+        if (false !== $lastdotpos) {
             $classpath{$lastdotpos+1} = strtoupper($classpath{$lastdotpos+1});
         } else {
             // Allows to configure full classname instead of a dot-path notation
@@ -277,20 +277,22 @@ class GeneratorConfig implements GeneratorConfigInterface
     public function getBuildConnection($databaseName = null)
     {
         $connections = $this->getBuildConnections();
+
         if (null === $databaseName) {
             $databaseName = $this->defaultBuildConnection;
         }
+
         if (isset($connections[$databaseName])) {
             return $connections[$databaseName];
-        } else {
-            // fallback to the single connection from build.properties
-            return array(
-                'adapter'  => $this->getBuildProperty('databaseAdapter'),
-                'dsn'      => $this->getBuildProperty('databaseUrl'),
-                'user'     => $this->getBuildProperty('databaseUser'),
-                'password' => $this->getBuildProperty('databasePassword'),
-            );
         }
+
+        // fallback to the single connection from build.properties
+        return array(
+            'adapter'  => $this->getBuildProperty('databaseAdapter'),
+            'dsn'      => $this->getBuildProperty('databaseUrl'),
+            'user'     => $this->getBuildProperty('databaseUser'),
+            'password' => $this->getBuildProperty('databasePassword'),
+        );
     }
 
     public function getBuildPDO($database)
